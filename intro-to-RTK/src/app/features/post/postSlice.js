@@ -5,14 +5,12 @@ const initialState = [
 	{
 		id: 1,
 		title: "how to start with C#",
-		author: "fady gamil",
 		content:
 			"to start with any language, you have to learn the basics then learn the OOP concepts and go to design pattern and other advanced stuff of the language",
 	},
 	{
 		id: 2,
 		title: "how to start with DDD",
-		author: "fady gamil",
 		content:
 			"you need to learn the basics of OOP and grasp them first, and then go to some concepts such as domain models, aggregate, value objects, and ....",
 	},
@@ -27,13 +25,13 @@ const postSlice = createSlice({
 			reducer(state, action) {
 				state.push(action.payload);
 			},
-			prepare(title, author, content) {
+			prepare(title, authorId, content) {
 				return {
 					payload: {
 						id: nanoid(),
 						title,
-						author,
 						content,
+						authorId,
 					},
 				};
 			},
