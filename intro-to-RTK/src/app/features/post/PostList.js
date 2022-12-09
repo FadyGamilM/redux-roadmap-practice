@@ -1,10 +1,21 @@
 import { sub } from "date-fns";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectUsers } from "../users/UserSlice";
-import { selectAllPosts } from "./postSlice";
+import PostReaction from "./PostReaction";
+import { postReactionAdded, selectAllPosts } from "./postSlice";
+
+let happyFace = "🙂 ";
+let sadFace = "😠 ";
+
+const emojis = {
+	Like: happyFace,
+	DisLike: sadFace,
+};
 
 const PostList = () => {
+	const dispatch = useDispatch();
+
 	// select the state
 	let posts = useSelector(selectAllPosts);
 
@@ -18,6 +29,9 @@ const PostList = () => {
 		else return "UnKnown Author";
 	};
 
+	// const orderedPosts = posts
+	// 	.slice()
+	// 	.sort((a, b) => b.time.localeCompare(a.time));
 	const renderPosts = posts.map((post) => {
 		return (
 			<article className="p-2 m-2 border-1 bg-slate-200" key={post.id}>
@@ -28,6 +42,26 @@ const PostList = () => {
 				<h1 className="text-sm text-gray-700 font-bold">
 					writter by : {FilterAuthors(post.authorId)}
 				</h1>
+				{/* <PostReaction post={post} /> */}
+				{Object.entries(emojis).map(([reactionName, reactionValue]) => {
+					return (
+						<button
+							key={reactionName}
+							onClick={() =>
+								dispatch(
+									postReactionAdded({
+										postId: post.id,
+										reactionType: reactionName,
+									})
+								)
+							}
+							className=" p-2 transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110"
+						>
+							{post.reactions[reactionName]}
+							{reactionValue}
+						</button>
+					);
+				})}
 			</article>
 		);
 	});
